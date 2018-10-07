@@ -20,17 +20,15 @@ monikerRange: ">=aps-pdw-2016||=azuresqldb-current||=azure-sqldw-latest||>=sql-s
 
  Public Key Cryptography is a form of message secrecy in which a user creates a *public* key and a *private* key. The private key is kept secret, whereas the public key can be distributed to others. Although the keys are mathematically related, the private key cannot be easily derived by using the public key. The public key can be used to encrypt data which only the corresponding private key will be able to decrypt. This can be used for encrypting messages to the owner of the private key. Similarly the owner of a private key can encrypt data which can only be decrypted with the public key. This use forms the basis of digital certificates in which information contained in the certificate is encrypted by the owner of a private key, assuring the author of the contents. Since the encrypting and decrypting keys are different they are known as *asymmetric* keys.
   
- Certificates and asymmetric keys are both ways to use asymmetric encryption. Certificates are often used as containers for asymmetric keys because they can contain more information such as expiry dates and issuers. There is no difference between the two mechanisms for the cryptographic algorithm, and no difference in strength given the same key length. Generally, you use a certificate to encrypt other types of encryption keys in a database, or to sign code modules.  
-  
- Certificates and asymmetric keys can decrypt data that the other encrypts. Generally, you use asymmetric encryption to encrypt a symmetric key for storage in a database.  
-  
- A public key does not have a particular format like a certificate would have, and you cannot export it to a file.  
+ Certificates are a format containing the owner's public key, the issuer's signature and other information such as expiry dates and distinguished names of the owner and issuer. The issuer's signature is information in the certificate that is encrypted - also known as signed - by the issuer's private key. If the issuer and owner are different on one certificate then to verify this certificate the issuer's public key must be used to decrypt the signed information. This public key will be on another certificate where the first issuer is the owner. This second certificate may also have a different issuer, and so a third certificate must be available to verify the first two. This process is followed until a certificate where the issuer and owner are the same is reached. This forms a certificate chain. This final certificate, and hence the entire chain will be trusted if it matches one of a set of known certificates, known as root certificates, which are securely distributed to the operating environment. If the final certificate cannot be identified against this trust store, it is treated as self-signed and not trusted. This is known as a chain of trust, and the whole system forms a Public Key Infrastrucutre (PKI).
+ 
+ Certificates may contain the signed hash of a codebase to verify code integrity and authorship, or the public key in a certificate can be used to encrypt a symmetric key used for storage in a database.  
   
 > [!NOTE]  
 >  [!INCLUDE[ssNoVersion](../../includes/ssnoversion-md.md)] contains features that enable you to create and manage certificates and keys for use with the server and database. [!INCLUDE[ssNoVersion](../../includes/ssnoversion-md.md)] cannot be used to create and manage certificates and keys with other applications or in the operating system.  
   
 ## Certificates  
- A certificate is a digitally signed security object that contains a public (and optionally a private) key for [!INCLUDE[ssNoVersion](../../includes/ssnoversion-md.md)]. You can use externally generated certificates or [!INCLUDE[ssNoVersion](../../includes/ssnoversion-md.md)] can generate certificates.  
+ A certificate is a digitally signed security object that contains a public key for [!INCLUDE[ssNoVersion](../../includes/ssnoversion-md.md)]. You can use externally generated certificates or [!INCLUDE[ssNoVersion](../../includes/ssnoversion-md.md)] can generate certificates.  
   
 > [!NOTE]  
 >  [!INCLUDE[ssNoVersion](../../includes/ssnoversion-md.md)] certificates comply with the IETF X.509v3 certificate standard.  
